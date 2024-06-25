@@ -1,0 +1,7 @@
+{
+  "label": "Coin 和 Token",
+  "link": {
+    "type": "generated-index",
+    "description": "Coin 和 Token 类似。在实践中，这些术语可以互换使用，但它们的实现存在一些差异。"
+  }
+}
