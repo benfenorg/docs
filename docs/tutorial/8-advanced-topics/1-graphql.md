@@ -83,7 +83,7 @@ query {
 
 ### 示例3：获取某个地址拥有的Coin对象​
 
-目标是返回地址拥有的所有 `Coin<0x2::sui::SUI>` 对象。
+目标是返回地址拥有的所有 `Coin<0x2::bfc::BFC>` 对象。
 
 JSON-RPC：
 
@@ -94,7 +94,7 @@ query {
   "method": "suix_getCoins",
   "params": [
     "0x5094652429957619e6efa79a404a6714d1126e63f551f4b6c7fb76440f8118c9", //owner
-    "0x2::sui::SUI",                                                      //coin type
+    "0x2::bfc::BFC",                                                      //coin type
     "0xe5c651321915b06c81838c2e370109b554a448a78d3a56220f798398dde66eab", //cursor
     3 //limit
   ]
@@ -109,7 +109,7 @@ query {
     coins(
       first: 3,
       after: "IAB3ha2PEA4ESRF4UErsJufJEwYpmSbCq7UNpxIHnLhG",
-      type: "0x2::sui::SUI"
+      type: "0x2::bfc::BFC"
     ) {
       nodes {
         address

@@ -1,12 +1,12 @@
 # 游戏内代币
 
-使用 Sui Closed-Loop Token 标准，您可以创建游戏内代币（例如手机游戏中的宝石或钻石），您可以将其授予玩家进行操作或可供购买。你在 Sui 上铸造代币，但玩家只能在游戏本身的经济范围内使用代币。这些类型的代币通常不可转让，您通常会按预定数量铸造它们，以保持稀缺性和游戏平衡。
+使用 Bfc Closed-Loop Token 标准，您可以创建游戏内代币（例如手机游戏中的宝石或钻石），您可以将其授予玩家进行操作或可供购买。你在 Bfc 上铸造代币，但玩家只能在游戏本身的经济范围内使用代币。这些类型的代币通常不可转让，您通常会按预定数量铸造它们，以保持稀缺性和游戏平衡。
 
-以下示例创建了一种称为 GEM 的游戏内货币，它代表一定数量的 SUI。在示例中，用户可以使用 SUI 购买可替代的 GEM，然后将其用作游戏中的货币。使用代码注释来遵循示例的逻辑。
+以下示例创建了一种称为 GEM 的游戏内货币，它代表一定数量的 BFC。在示例中，用户可以使用 BFC 购买可替代的 GEM，然后将其用作游戏中的货币。使用代码注释来遵循示例的逻辑。
 
 ### 示例
 
-Sui 存储库提供了创建游戏内货币的基本示例。创建示例经济性的 Move 模块位于 gems.move 源文件中。
+Bfc 存储库提供了创建游戏内货币的基本示例。创建示例经济性的 Move 模块位于 gems.move 源文件中。
 
 #### 模块 examples::sword
 
@@ -16,7 +16,7 @@ Sui 存储库提供了创建游戏内货币的基本示例。创建示例经济�
 // examples/move/token/sources/gems.move
 
 module examples::sword {
-    use sui::token::{Self, Token, ActionRequest};
+    use bfc::token::{Self, Token, ActionRequest};
     use examples::gem::GEM;
 
     const EWrongAmount: u64 = 0;
@@ -74,7 +74,7 @@ fun init(otw: GEM, ctx: &mut TxContext) {
 // examples/move/token/sources/gems.move
 
 public fun buy_gems(
-    self: &mut GemStore, payment: Coin<SUI>, ctx: &mut TxContext
+    self: &mut GemStore, payment: Coin<BFC>, ctx: &mut TxContext
 ): (Token<GEM>, ActionRequest<GEM>) {
     let amount = coin::value(&payment);
     let purchased = if (amount == SMALL_BUNDLE) {

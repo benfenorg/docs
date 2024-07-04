@@ -4,7 +4,7 @@
 
 ## VRF 规范
 
-Sui 中的 Move API 中使用的 VRF 是遵循 CFRG VRF 草案规范版本 15 的椭圆曲线 VRF (ECVRF)。它使用带有 SHA-512 哈希函数的 Ristretto255 椭圆曲线组构造。随机数是根据 RFC6979 生成的。
+Bfc 中的 Move API 中使用的 VRF 是遵循 CFRG VRF 草案规范版本 15 的椭圆曲线 VRF (ECVRF)。它使用带有 SHA-512 哈希函数的 Ristretto255 椭圆曲线组构造。随机数是根据 RFC6979 生成的。
 
 任何遵循与套件字符串 sui_vrf 相同规范的实现（请参阅 VRF 规范中的第 5 节）都可以用于计算 VRF 输出并生成证明。
 
@@ -42,12 +42,12 @@ Output: 2b7e45821d80567761e8bb3fc519efe5ad80cdb4423227289f960319bbcf6eea1aef30c0
 
 ### 验证证明​
 
-您可以使用 Sui Move 框架中的 sui::ecvrf::ecvrf_verify 验证智能合约中的证明和输出：
+您可以使用 Bfc Move 框架中的 bfc::ecvrf::ecvrf_verify 验证智能合约中的证明和输出：
 
 ```move
 module math::ecvrf_test {
-    use sui::ecvrf;
-    use sui::event;
+    use bfc::ecvrf;
+    use bfc::event;
 
     /// Event on whether the output is verified
     struct VerifiedEvent has copy, drop {

@@ -1,12 +1,12 @@
 # 签署和发送交易
 
-Sui 中的交易表示对特定功能的调用（例如调用智能合约函数），这些功能在输入上执行以定义交易的结果。
+Bfc 中的交易表示对特定功能的调用（例如调用智能合约函数），这些功能在输入上执行以定义交易的结果。
 
 输入可以是对象引用（对拥有的对象、不可变对象或共享对象），也可以是编码值（例如，用作 Move 调用的参数的字节向量）。交易构建后，通常通过使用可编程交易块（PTB），用户对交易进行签名并提交到链上执行。
 
-签名由钱包拥有的私钥提供，其公钥必须与交易发送者的 Sui 地址一致。
+签名由钱包拥有的私钥提供，其公钥必须与交易发送者的 Bfc 地址一致。
 
-Sui 使用 `SuiKeyPair` 生成签名，该签名提交到意图消息的 `Blake2b` 哈希摘要 ( `intent || bcs bytes of tx_data` )。目前支持的签名方案有 `Ed25519 Pure` 、 `ECDSA Secp256k1` 、 `ECDSA Secp256r1` 、 `Multisig` 和 `zkLogin` 。
+Bfc 使用 `SuiKeyPair` 生成签名，该签名提交到意图消息的 `Blake2b` 哈希摘要 ( `intent || bcs bytes of tx_data` )。目前支持的签名方案有 `Ed25519 Pure` 、 `ECDSA Secp256k1` 、 `ECDSA Secp256r1` 、 `Multisig` 和 `zkLogin` 。
 
 您可以使用 `SuiKeyPair` 实例化 `Ed25519 Pure` 、 `ECDSA Secp256k1` 和 `ECDSA Secp256r1` 并使用它来签署交易。请注意，本指南不适用于 `Multisig` 和 `zkLogin`。
 
@@ -27,18 +27,18 @@ Sui 使用 `SuiKeyPair` 生成签名，该签名提交到意图消息的 `Blake2
 
 ### 示例
 
-以下示例演示了如何使用 Rust、TypeScript 或 Sui CLI 签署和执行交易。
+以下示例演示了如何使用 Rust、TypeScript 或 Bfc CLI 签署和执行交易。
 
-有多种方法可以实例化密钥对并使用 Sui TypeScript SDK 派生其公钥和 Sui 地址。
+有多种方法可以实例化密钥对并使用 Bfc TypeScript SDK 派生其公钥和 Bfc 地址。
 
 ```
 import { fromHEX } from '@mysten/bcs';
-import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
-import { type Keypair } from '@mysten/sui/cryptography';
-import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
-import { Secp256k1Keypair } from '@mysten/sui/keypairs/secp256k1';
-import { Secp256r1Keypair } from '@mysten/sui/keypairs/secp256r1';
-import { Transaction } from '@mysten/sui/transactions';
+import { getFullnodeUrl, SuiClient } from '@mysten/bfc/client';
+import { type Keypair } from '@mysten/bfc/cryptography';
+import { Ed25519Keypair } from '@mysten/bfc/keypairs/ed25519';
+import { Secp256k1Keypair } from '@mysten/bfc/keypairs/secp256k1';
+import { Secp256r1Keypair } from '@mysten/bfc/keypairs/secp256r1';
+import { Transaction } from '@mysten/bfc/transactions';
 
 const kp_rand_0 = new Ed25519Keypair();
 const kp_rand_1 = new Secp256k1Keypair();
@@ -78,7 +78,7 @@ const serializedSignature = (await keypair.signTransaction(bytes)).signature;
 // verify the signature locally
 expect(await keypair.getPublicKey().verifyTransaction(bytes, serializedSignature)).toEqual(true);
 
-// define sui client for the desired network.
+// define bfc client for the desired network.
 const client = new SuiClient({ url: getFullnodeUrl('testnet') });
 
 // execute transaction.

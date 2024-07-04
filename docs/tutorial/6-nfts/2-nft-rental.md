@@ -1,6 +1,6 @@
 # NFT 租赁示例
 
-NFT 租赁是一种允许没有所有权或拥有特定 NFT 的个人临时使用或体验它的机制。此流程的实施利用 Kiosk Apps 标准来建立租赁交易的基础设施。这种方法与以太坊 ERC-4907 租赁标准紧密一致，使其成为打算在 Sui 上实施的基于 Solidity 的用例的合适选择。
+NFT 租赁是一种允许没有所有权或拥有特定 NFT 的个人临时使用或体验它的机制。此流程的实施利用 Kiosk Apps 标准来建立租赁交易的基础设施。这种方法与以太坊 ERC-4907 租赁标准紧密一致，使其成为打算在 Bfc 上实施的基于 Solidity 的用例的合适选择。
 
 NFT租赁示例满足以下项目要求：
 
@@ -49,7 +49,7 @@ NFT租赁示例满足以下项目要求：
 
 ### Move 模块
 
-NFT 租赁示例使用单个模块 `nft_rental.move` 。您可以在 sui 存储库的 `examples` 目录中找到该文件的源代码。源代码包含大量注释，可帮助您理解示例的逻辑和结构。
+NFT 租赁示例使用单个模块 `nft_rental.move` 。您可以在 bfc 存储库的 `examples` 目录中找到该文件的源代码。源代码包含大量注释，可帮助您理解示例的逻辑和结构。
 
 #### nft_rental
 
@@ -114,7 +114,7 @@ public struct Rentable<T: key + store> has store {
 ```
 public struct RentalPolicy<phantom T> has key, store {
   id: UID,
-  balance: Balance<SUI>,
+  balance: Balance<BFC>,
   /// Note: Move does not support float numbers.
   ///
   /// If you need to represent a float, you need to determine the desired
@@ -180,7 +180,7 @@ public fun setup_renting<T>(publisher: &Publisher, amount_bp: u64, ctx: &mut TxC
 
   let rental_policy = RentalPolicy<T> {
     id: object::new(ctx),
-    balance: balance::zero<SUI>(),
+    balance: balance::zero<BFC>(),
     amount_bp,
   };
 
@@ -211,12 +211,12 @@ public fun list<T: key + store>(
   // between users without the owner being updated.
   kiosk.set_owner(cap, ctx);
 
-  // Lists the item for zero SUI.
+  // Lists the item for zero BFC.
   kiosk.list<T>(cap, item_id, 0);
 
   // Constructs a zero coin.
-  let coin = coin::zero<SUI>(ctx);
-  // Purchases the item with 0 SUI.
+  let coin = coin::zero<BFC>(ctx);
+  // Purchases the item with 0 BFC.
   let (object, request) = kiosk.purchase<T>(item_id, coin);
 
   // Resolves the TransferRequest with the empty TransferPolicy which is protected and accessible only via this module.
@@ -279,7 +279,7 @@ public fun rent<T: key + store>(
   borrower_kiosk: &mut Kiosk,
   rental_policy: &mut RentalPolicy<T>,
   item_id: ID,
-  mut coin: Coin<SUI>,
+  mut coin: Coin<BFC>,
   clock: &Clock,
   ctx: &mut TxContext,
 ) {

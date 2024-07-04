@@ -1,6 +1,6 @@
 # 共享对象与拥有对象
 
-Sui 上的对象可以是共享的（可通过任何事务进行读取和写入访问）或拥有（可通过其所有者签名的事务进行读取和写入访问）。许多应用程序可以使用使用共享对象或仅使用自有对象的解决方案来构建，并且需要权衡每个对象的权衡。
+Bfc 上的对象可以是共享的（可通过任何事务进行读取和写入访问）或拥有（可通过其所有者签名的事务进行读取和写入访问）。许多应用程序可以使用使用共享对象或仅使用自有对象的解决方案来构建，并且需要权衡每个对象的权衡。
 
 仅使用自有对象的交易受益于极低的最终延迟，因为它们不需要达成共识。另一方面，只有对象的所有者才能访问它，这使得需要处理多方拥有的对象的流程变得复杂，并且对非常热门的对象的访问需要在链外进行协调。
 
@@ -10,7 +10,7 @@ Sui 上的对象可以是共享的（可通过任何事务进行读取和写入�
 
 总而言之，对延迟或 Gas 成本极其敏感、不需要处理复杂的多方交易或已经需要链下服务的应用程序可以从仅使用拥有对象的设计中受益。需要多方之间协调的应用程序通常受益于使用共享对象。
 
-有关 Sui 支持的对象类型的更多信息，请参阅对象所有权。
+有关 Bfc 支持的对象类型的更多信息，请参阅对象所有权。
 
 ###  示例：托管​
 
@@ -20,8 +20,8 @@ Sui 上的对象可以是共享的（可通过任何事务进行读取和写入�
 
 ```
 module escrow::lock {
-    use sui::object::{Self, ID, UID};
-    use sui::tx_context::TxContext;
+    use bfc::object::{Self, ID, UID};
+    use bfc::tx_context::TxContext;
 
     /// A wrapper that protects access to `obj` by requiring access to a `Key`.
     ///
@@ -70,13 +70,13 @@ module escrow::lock {
     }
 
     // === Tests ===
-    #[test_only] use sui::coin::{Self, Coin};
-    #[test_only] use sui::sui::SUI;
-    #[test_only] use sui::test_scenario::{Self as ts, Scenario};
+    #[test_only] use bfc::coin::{Self, Coin};
+    #[test_only] use bfc::bfc::BFC;
+    #[test_only] use bfc::test_scenario::{Self as ts, Scenario};
 
     #[test_only]
-    fun test_coin(ts: &mut Scenario): Coin<SUI> {
-        coin::mint_for_testing<SUI>(42, ts::ctx(ts))
+    fun test_coin(ts: &mut Scenario): Coin<BFC> {
+        coin::mint_for_testing<BFC>(42, ts::ctx(ts))
     }
 
     #[test]
@@ -233,7 +233,7 @@ public fun swap<T: key + store, U: key + store>(
 ///
 ///    - The key supplied in the swap unlocks the `Locked<U>`.
 module escrow::shared {
-    use sui::{
+    use bfc::{
         event,
         dynamic_object_field::{Self as dof}
     };
@@ -375,17 +375,17 @@ module escrow::shared {
     }
 
     // === Tests ===
-    #[test_only] use sui::coin::{Self, Coin};
-    #[test_only] use sui::sui::SUI;
-    #[test_only] use sui::test_scenario::{Self as ts, Scenario};
+    #[test_only] use bfc::coin::{Self, Coin};
+    #[test_only] use bfc::bfc::BFC;
+    #[test_only] use bfc::test_scenario::{Self as ts, Scenario};
 
     #[test_only] const ALICE: address = @0xA;
     #[test_only] const BOB: address = @0xB;
     #[test_only] const DIANE: address = @0xD;
 
     #[test_only]
-    fun test_coin(ts: &mut Scenario): Coin<SUI> {
-        coin::mint_for_testing<SUI>(42, ts.ctx())
+    fun test_coin(ts: &mut Scenario): Coin<BFC> {
+        coin::mint_for_testing<BFC>(42, ts.ctx())
     }
 
     #[test]
@@ -418,9 +418,9 @@ module escrow::shared {
         // return.
         {
             ts.next_tx(BOB);
-            let escrow: Escrow<Coin<SUI>> = ts.take_shared();
+            let escrow: Escrow<Coin<BFC>> = ts.take_shared();
             let k2: Key = ts.take_from_sender();
-            let l2: Locked<Coin<SUI>> = ts.take_from_sender();
+            let l2: Locked<Coin<BFC>> = ts.take_from_sender();
             let c = escrow.swap(k2, l2, ts.ctx());
 
             transfer::public_transfer(c, BOB);
@@ -431,13 +431,13 @@ module escrow::shared {
 
         // Alice gets the object from Bob
         {
-            let c: Coin<SUI> = ts.take_from_address_by_id(ALICE, i2);
+            let c: Coin<BFC> = ts.take_from_address_by_id(ALICE, i2);
             ts::return_to_address(ALICE, c);
         };
 
         // Bob gets the object from Alice
         {
-            let c: Coin<SUI> = ts.take_from_address_by_id(BOB, i1);
+            let c: Coin<BFC> = ts.take_from_address_by_id(BOB, i1);
             ts::return_to_address(BOB, c);
         };
 
@@ -469,9 +469,9 @@ module escrow::shared {
         // But Diane is the one who attempts the swap
         {
             ts.next_tx(DIANE);
-            let escrow: Escrow<Coin<SUI>> = ts.take_shared();
+            let escrow: Escrow<Coin<BFC>> = ts.take_shared();
             let k2: Key = ts.take_from_sender();
-            let l2: Locked<Coin<SUI>> = ts.take_from_sender();
+            let l2: Locked<Coin<BFC>> = ts.take_from_sender();
             let c = escrow.swap(k2, l2, ts.ctx());
 
             transfer::public_transfer(c, DIANE);
@@ -506,9 +506,9 @@ module escrow::shared {
         // cannot meet Alice's requirements.
         {
             ts.next_tx(BOB);
-            let escrow: Escrow<Coin<SUI>> = ts.take_shared();
+            let escrow: Escrow<Coin<BFC>> = ts.take_shared();
             let k2: Key = ts.take_from_sender();
-            let l2: Locked<Coin<SUI>> = ts.take_from_sender();
+            let l2: Locked<Coin<BFC>> = ts.take_from_sender();
             let c = escrow.swap(k2, l2, ts.ctx());
 
             transfer::public_transfer(c, BOB);
@@ -546,12 +546,12 @@ module escrow::shared {
         {
             ts.next_tx(BOB);
             let k: Key = ts.take_from_sender();
-            let l: Locked<Coin<SUI>> = ts.take_from_sender();
+            let l: Locked<Coin<BFC>> = ts.take_from_sender();
             let mut c = lock::unlock(l, k);
 
             let _dust = c.split(1, ts.ctx());
             let (l, k) = lock::lock(c, ts.ctx());
-            let escrow: Escrow<Coin<SUI>> = ts.take_shared();
+            let escrow: Escrow<Coin<BFC>> = ts.take_shared();
             let c = escrow.swap(k, l, ts.ctx());
 
             transfer::public_transfer(c, BOB);
@@ -577,7 +577,7 @@ module escrow::shared {
         // ...but has a change of heart and takes it back
         {
             ts.next_tx(ALICE);
-            let escrow: Escrow<Coin<SUI>> = ts.take_shared();
+            let escrow: Escrow<Coin<BFC>> = ts.take_shared();
             let c = escrow.return_to_sender(ts.ctx());
 
             transfer::public_transfer(c, ALICE);
@@ -587,7 +587,7 @@ module escrow::shared {
 
         // Alice can then access it.
         {
-            let c: Coin<SUI> = ts.take_from_address_by_id(ALICE, cid);
+            let c: Coin<BFC> = ts.take_from_address_by_id(ALICE, cid);
             ts::return_to_address(ALICE, c)
         };
 
@@ -621,7 +621,7 @@ module escrow::shared {
         // ...but then has a change of heart
         {
             ts.next_tx(ALICE);
-            let escrow: Escrow<Coin<SUI>> = ts.take_shared();
+            let escrow: Escrow<Coin<BFC>> = ts.take_shared();
             let c = escrow.return_to_sender(ts.ctx());
             transfer::public_transfer(c, ALICE);
         };
@@ -629,9 +629,9 @@ module escrow::shared {
         // Bob's attempt to complete the swap will now fail.
         {
             ts.next_tx(BOB);
-            let escrow: Escrow<Coin<SUI>> = ts.take_shared();
+            let escrow: Escrow<Coin<BFC>> = ts.take_shared();
             let k2: Key = ts.take_from_sender();
-            let l2: Locked<Coin<SUI>> = ts.take_from_sender();
+            let l2: Locked<Coin<BFC>> = ts.take_from_sender();
             let c = escrow.swap(k2, l2, ts.ctx());
 
             transfer::public_transfer(c, BOB);

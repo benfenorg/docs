@@ -52,13 +52,13 @@ public fun new_sword(
 要查看结果，请运行模块的测试。
 
 ```
-$ sui move test
+$ bfc move test
 ```
 
 当测试调用 `new_sword` 函数时，响应会打印出预期结果。
 
 ```
-INCLUDING DEPENDENCY Sui
+INCLUDING DEPENDENCY Bfc
 INCLUDING DEPENDENCY MoveStdlib
 BUILDING my_first_package
 Running Move unit tests
@@ -107,5 +107,5 @@ Test result: OK. Total tests: 2; passed: 2; failed: 0
 输出显示增量后 `Forge` 更改的 `swords_created` 字段的值。堆栈跟踪显示到目前为止已执行的字节码指令以及接下来要执行的几条指令。
 
 :::info
-具体的字节码偏移量和局部变量的索引可能会根据 Sui 工具链的版本而有所不同。
+具体的字节码偏移量和局部变量的索引可能会根据 Bfc 工具链的版本而有所不同。
 :::

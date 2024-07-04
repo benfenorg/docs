@@ -1,6 +1,6 @@
 # Move 的链上签名验证
 
-Sui 中的 Move 合约支持链上多种签名方案的验证。并非所有链上验证支持的签名都支持作为用户签名验证。有关交易授权的有效签名方案，请参阅 Sui Signatures。
+Bfc 中的 Move 合约支持链上多种签名方案的验证。并非所有链上验证支持的签名都支持作为用户签名验证。有关交易授权的有效签名方案，请参阅 Bfc Signatures。
 
 本主题涵盖：
 
@@ -47,7 +47,7 @@ Public key in hex: $PK
 2. 调用Move中的`verify`方法。所有输入均以十六进制格式的字节表示：
 
 ```move
-use sui::ed25519;
+use bfc::ed25519;
 
 let msg = x"$MSG";
 let pk = x"$PK";
@@ -73,7 +73,7 @@ Public key in hex: $PK
 2. 调用Move中的`verify`方法。所有输入均以十六进制格式的字节表示：
 
 ```move
-use sui::ecdsa_k1;
+use bfc::ecdsa_k1;
 
 let msg = x"$MSG";
 let pk = x"$PK";
@@ -100,7 +100,7 @@ Public key in hex: $PK
 2. 调用Move中的`ecrecover`方法。所有输入均以十六进制格式的字节表示：
 
 ```move
-use sui::ecdsa_k1;
+use bfc::ecdsa_k1;
 
 let msg = x"$MSG";
 let pk = x"$PK";
@@ -128,7 +128,7 @@ Public key in hex: $PK
 2. 调用Move中的`verify`方法。所有输入均以十六进制格式的字节表示：
 
 ```move
-use sui::ecdsa_r1;
+use bfc::ecdsa_r1;
 
 let msg = x"$MSG";
 let pk = x"$PK";
@@ -156,7 +156,7 @@ Public key in hex: $PK
 2. 调用Move中的`ecrecover`方法。所有输入均以十六进制格式的字节表示：
 
 ```move
-use sui::ecdsa_r1;
+use bfc::ecdsa_r1;
 
 let msg = x"$MSG";
 let pk = x"$PK";
@@ -184,7 +184,7 @@ Public key in hex: $PK
 2. 调用Move中的`verify`方法。所有输入均以十六进制格式的字节表示：
 
 ```move
-use sui::bls12381;
+use bfc::bls12381;
 
 let msg = x"$MSG";
 let pk = x"$PK";
@@ -211,7 +211,7 @@ Public key in hex: $PK
 2. 调用Move中的verify方法。所有输入均以十六进制格式的字节表示：
 
 ```move
-use sui::bls12381;
+use bfc::bls12381;
 
 let msg = x"$MSG";
 let pk = x"$PK";

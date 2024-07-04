@@ -6,7 +6,7 @@
 // examples/move/coin/sources/my_coin.move
 
 module examples::my_coin {
-    use sui::coin::{Self, TreasuryCap};
+    use bfc::coin::{Self, TreasuryCap};
 
     public struct MY_COIN has drop {}
 
@@ -29,7 +29,7 @@ module examples::my_coin {
 }
 ```
 
-`Coin<T>` 是 Sui 上硬币的通用实现。访问 `TreasuryCap` 可以控制硬币的铸造和燃烧。进一步的交易可以直接发送到 `sui::coin::Coin` ，并使用 `TreasuryCap` 对象作为授权。
+`Coin<T>` 是 Bfc 上硬币的通用实现。访问 `TreasuryCap` 可以控制硬币的铸造和燃烧。进一步的交易可以直接发送到 `bfc::coin::Coin` ，并使用 `TreasuryCap` 对象作为授权。
 
 该示例模块包含一个 `mint` 函数。您将从 `init` 函数创建的 `TreasuryCap` 传递给模块的 `mint` 函数。然后，该函数使用 `Coin` 模块中的 `mint` 函数创建（铸造）一枚硬币，然后将其转移到一个地址。
 
@@ -49,10 +49,10 @@ public fun mint(
 
 ### BenFen CLI
 
-如果您将前面的示例发布到 Sui 网络，则可以使用 `sui client call` 命令铸造硬币并将其传送到您提供的地址。有关命令行界面的更多信息，请参阅 Sui CLI。
+如果您将前面的示例发布到 Bfc 网络，则可以使用 `bfc client call` 命令铸造硬币并将其传送到您提供的地址。有关命令行界面的更多信息，请参阅 Bfc CLI。
 
 ```
-sui client call --function mint --module mycoin --package <PACKAGE-ID> --args <TREASURY-CAP-ID> <COIN-AMOUNT> <RECIPIENT-ADDRESS>
+bfc client call --function mint --module mycoin --package <PACKAGE-ID> --args <TREASURY-CAP-ID> <COIN-AMOUNT> <RECIPIENT-ADDRESS>
 ```
 
 如果调用成功，您的控制台将显示结果，其中包括余额更改部分，其中包含以下信息：
@@ -69,7 +69,7 @@ Amount: <COIN-AMOUNT>
 
 ###  拒绝名单​
 
-Sui 框架提供了一个 `DenyList` 单例共享对象， `DenyCap` 的持有者可以访问该对象来指定无法使用 Sui 核心类型的地址列表。然而， `DenyList` 的初始用例侧重于限制对指定类型硬币的访问。例如，当在 Sui 上创建受监管的代币时，需要能够阻止某些地址将其用作交易的输入，这非常有用。 Sui 上受监管的代币满足任何要求能够防止已知不良行为者获取这些代币的法规。
+Bfc 框架提供了一个 `DenyList` 单例共享对象， `DenyCap` 的持有者可以访问该对象来指定无法使用 Bfc 核心类型的地址列表。然而， `DenyList` 的初始用例侧重于限制对指定类型硬币的访问。例如，当在 Bfc 上创建受监管的代币时，需要能够阻止某些地址将其用作交易的输入，这非常有用。 Bfc 上受监管的代币满足任何要求能够防止已知不良行为者获取这些代币的法规。
 
 :::info
 DenyList 对象是一个系统对象，其地址为 `0x403` 。您无法自己创建它。

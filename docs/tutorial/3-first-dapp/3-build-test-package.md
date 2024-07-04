@@ -13,8 +13,8 @@ $ bfc move build
 成功的构建会返回类似于以下内容的响应：
 
 ```
-UPDATING GIT DEPENDENCY https://github.com/MystenLabs/sui.git
-INCLUDING DEPENDENCY Sui
+UPDATING GIT DEPENDENCY https://github.com/MystenLabs/bfc.git
+INCLUDING DEPENDENCY Bfc
 INCLUDING DEPENDENCY MoveStdlib
 BUILDING my_first_package
 ```
@@ -25,18 +25,18 @@ BUILDING my_first_package
 
 ###  测试包​
 
-Sui 包括对 Move 测试框架的支持。使用该框架，您可以编写分析 Move 代码的单元测试，就像其他语言的测试框架一样，例如内置的 Rust 测试框架或 Java 的 JUnit 框架。
+Bfc 包括对 Move 测试框架的支持。使用该框架，您可以编写分析 Move 代码的单元测试，就像其他语言的测试框架一样，例如内置的 Rust 测试框架或 Java 的 JUnit 框架。
 
-单个 Move 单元测试封装在一个公共函数中，该函数没有参数、没有返回值，并且具有 `#[test]` 注释。当您从包根目录（根据当前运行示例的 `my_move_package` 目录）调用 `sui move test` 命令时，测试框架会执行此类函数：
+单个 Move 单元测试封装在一个公共函数中，该函数没有参数、没有返回值，并且具有 `#[test]` 注释。当您从包根目录（根据当前运行示例的 `my_move_package` 目录）调用 `bfc move test` 命令时，测试框架会执行此类函数：
 
 ```
-$ sui move test
+$ bfc move test
 ```
 
 如果对编写包中创建的包执行此命令，您将看到以下输出。毫不奇怪，测试结果具有 `OK` 状态，因为还没有编写失败的测试。
 
 ```
-BUILDING Sui
+BUILDING Bfc
 BUILDING MoveStdlib
 BUILDING my_first_package
 Running Move unit tests
@@ -71,7 +71,7 @@ fun test_sword_create() {
 现在您已经有了测试功能，请再次运行测试命令：
 
 ```
-$ sui move test
+$ bfc move test
 ```
 
 但是，运行 `test` 命令后，您会收到编译错误而不是测试结果：
@@ -114,7 +114,7 @@ transfer::public_transfer(sword, dummy_address);
 
 ```
 BUILDING MoveStdlib
-BUILDING Sui
+BUILDING Bfc
 BUILDING my_first_package
 Running Move unit tests
 [ PASS    ] 0x0::my_module::test_sword_create
@@ -122,13 +122,13 @@ Test result: OK. Total tests: 1; passed: 1; failed: 0
 ```
 
 :::tip
-使用过滤字符串仅运行单元测试的匹配子集。通过提供的过滤字符串， `sui move test` 检查完全限定 ( `<address>::<module_name>::<fn_name>` ) 名称是否匹配。
+使用过滤字符串仅运行单元测试的匹配子集。通过提供的过滤字符串， `bfc move test` 检查完全限定 ( `<address>::<module_name>::<fn_name>` ) 名称是否匹配。
 :::
 
 例子：
 
 ```
-$ sui move test sword
+$ bfc move test sword
 ```
 
 上一个命令运行名称包含 `sword` 的所有测试。
@@ -136,20 +136,20 @@ $ sui move test sword
 您可以通过以下方式发现更多测试选项：
 
 ```
-$ sui move test -h
+$ bfc move test -h
 ```
 
-### Sui 特定测试​
+### Bfc 特定测试​
 
-前面的测试示例使用 Move，但除了使用一些 Sui 包（例如 `sui::tx_context` 和 `sui::transfer` ）之外，并不特定于 Sui。虽然这种测试风格对于为 Sui 编写 Move 代码已经很有用，但您可能还想测试其他特定于 Sui 的功能。特别是，Sui 中的 Move 调用封装在 Sui 事务中，您可能希望在单个测试中测试不同事务之间的交互（例如，一个事务创建对象，另一个事务传输对象）。
+前面的测试示例使用 Move，但除了使用一些 Bfc 包（例如 `bfc::tx_context` 和 `bfc::transfer` ）之外，并不特定于 Sui。虽然这种测试风格对于为 Bfc 编写 Move 代码已经很有用，但您可能还想测试其他特定于 Bfc 的功能。特别是，Sui 中的 Move 调用封装在 Bfc 事务中，您可能希望在单个测试中测试不同事务之间的交互（例如，一个事务创建对象，另一个事务传输对象）。
 
-Sui 特定的测试是通过 `test_scenario` 模块支持的，该模块提供了与 Sui 相关的测试功能，而这些功能在纯 Move 及其测试框架中是不可用的。
+Bfc 特定的测试是通过 `test_scenario` 模块支持的，该模块提供了与 Bfc 相关的测试功能，而这些功能在纯 Move 及其测试框架中是不可用的。
 
-`test_scenario` 模块提供了一个模拟一系列 Sui 事务的场景，每个事务都有可能由不同的用户执行。使用此模块的测试通常使用 `test_scenario::begin` 函数启动第一个事务。该函数将执行交易的用户地址作为参数，并返回表示场景的 `Scenario` 结构体的实例。
+`test_scenario` 模块提供了一个模拟一系列 Bfc 事务的场景，每个事务都有可能由不同的用户执行。使用此模块的测试通常使用 `test_scenario::begin` 函数启动第一个事务。该函数将执行交易的用户地址作为参数，并返回表示场景的 `Scenario` 结构体的实例。
 
-`Scenario` 结构的实例包含模拟 Sui 对象存储的每地址对象池，并提供用于操作池中对象的辅助函数。第一个事务完成后，后续的测试事务从 `test_scenario::next_tx` 函数开始。该函数采用表示当前场景的 `Scenario` 结构实例和用户地址作为参数。
+`Scenario` 结构的实例包含模拟 Bfc 对象存储的每地址对象池，并提供用于操作池中对象的辅助函数。第一个事务完成后，后续的测试事务从 `test_scenario::next_tx` 函数开始。该函数采用表示当前场景的 `Scenario` 结构实例和用户地址作为参数。
 
-更新您的 `my_module.move` 文件以包含可从 Sui 调用的实现 `sword` 创建的函数。完成此操作后，您就可以添加使用 `test_scenario` 模块的多事务测试来测试这些新功能。将此函数放在访问器之后（注释中的第 5 部分）。
+更新您的 `my_module.move` 文件以包含可从 Bfc 调用的实现 `sword` 创建的函数。完成此操作后，您就可以添加使用 `test_scenario` 模块的多事务测试来测试这些新功能。将此函数放在访问器之后（注释中的第 5 部分）。
 
 ```
 // examples/move/first_package/sources/example.move
@@ -163,7 +163,7 @@ public fun sword_create(magic: u64, strength: u64, ctx: &mut TxContext): Sword {
 }
 ```
 
-新函数的代码使用结构体创建和 Sui 内部模块 ( `tx_context` )，其方式与您在前面几节中看到的类似。重要的部分是函数具有正确的签名。
+新函数的代码使用结构体创建和 Bfc 内部模块 ( `tx_context` )，其方式与您在前面几节中看到的类似。重要的部分是函数具有正确的签名。
 
 包含新函数后，添加另一个测试函数以确保其行为符合预期。
 
@@ -172,7 +172,7 @@ public fun sword_create(magic: u64, strength: u64, ctx: &mut TxContext): Sword {
 
 #[test]
 fun test_sword_transactions() {
-    use sui::test_scenario;
+    use bfc::test_scenario;
 
     // Create test addresses representing users
     let initial_owner = @0xCAFE;
@@ -211,7 +211,7 @@ fun test_sword_transactions() {
 
 新的测试功能有一些细节需要注意。代码所做的第一件事是创建一些代表参与测试场景的用户的地址。然后，测试通过代表初始剑拥有者启动第一笔交易来创建一个场景。
 
-然后，初始所有者执行第二笔交易（作为参数传递给 `test_scenario::next_tx` 函数），后者将他们现在拥有的 `sword` 转移给最终所有者。在纯粹的Move中，没有Sui存储的概念；因此，模拟的 Sui 交易没有简单的方法从存储中检索它。这就是 `test_scenario` 模块提供帮助的地方 - 它的 `take_from_sender` 函数允许执行当前事务的给定类型（ `Sword` ）的地址拥有的对象可用于移动代码操作。现在，假设只有一个这样的对象。在这种情况下，测试将从存储中检索的对象传输到另一个地址。
+然后，初始所有者执行第二笔交易（作为参数传递给 `test_scenario::next_tx` 函数），后者将他们现在拥有的 `sword` 转移给最终所有者。在纯粹的Move中，没有Sui存储的概念；因此，模拟的 Bfc 交易没有简单的方法从存储中检索它。这就是 `test_scenario` 模块提供帮助的地方 - 它的 `take_from_sender` 函数允许执行当前事务的给定类型（ `Sword` ）的地址拥有的对象可用于移动代码操作。现在，假设只有一个这样的对象。在这种情况下，测试将从存储中检索的对象传输到另一个地址。
 
 :::tip
 事务效果（例如对象创建和传输）仅在给定事务完成后才可见。例如，如果运行示例中的第二个事务创建了 `sword` 并将其传输到管理员的地址，则它只能从管理员的地址中检索（通过 `test_scenario` 、`< b2>` 或 `take_from_address` 函数）在第三个事务中。
@@ -219,12 +219,12 @@ fun test_sword_transactions() {
 
 最终所有者执行第三个也是最后一个事务，从存储中检索 `sword` 对象并检查它是否具有预期的属性。请记住，如测试包中所述，在纯 Move 测试场景中，当对象在 Move 代码中可用后（在创建或从模拟存储中检索后），它不能简单地消失。
 
-在纯Move测试函数中，该函数将 `sword` 对象传输到假地址来处理消失问题。然而， `test_scenario` 包提供了一个更优雅的解决方案，它更接近 Move 代码在 Sui 上下文中实际执行时发生的情况 - 该包只是将 `sword` 返回到对象池使用 `test_scenario::return_to_sender` 函数。对于不希望返回发送者或者您只想销毁对象的情况， `test_utils` 模块还提供通用 `destroy<T>` 函数，该函数可用于任何类型 T 无论其能力如何。建议还检查 `test_scenario` 和 `test_utils` 模块中的其他有用功能。
+在纯Move测试函数中，该函数将 `sword` 对象传输到假地址来处理消失问题。然而， `test_scenario` 包提供了一个更优雅的解决方案，它更接近 Move 代码在 Bfc 上下文中实际执行时发生的情况 - 该包只是将 `sword` 返回到对象池使用 `test_scenario::return_to_sender` 函数。对于不希望返回发送者或者您只想销毁对象的情况， `test_utils` 模块还提供通用 `destroy<T>` 函数，该函数可用于任何类型 T 无论其能力如何。建议还检查 `test_scenario` 和 `test_utils` 模块中的其他有用功能。
 
 再次运行测试命令可以看到我们的模块的两次成功测试：
 
 ```
-BUILDING Sui
+BUILDING Bfc
 BUILDING MoveStdlib
 BUILDING my_first_package
 Running Move unit tests
@@ -250,7 +250,7 @@ Test result: OK. Total tests: 2; passed: 2; failed: 0
 - `fun init(otw: EXAMPLE, ctx: &TxContext)`
 - `fun init(otw: EXAMPLE, ctx: &mut TxContext)`
 
-虽然 `sui move` 命令不支持显式发布，但您仍然可以使用测试框架测试模块初始值设定项，方法是将第一个事务专用于执行初始值设定项函数。
+虽然 `bfc move` 命令不支持显式发布，但您仍然可以使用测试框架测试模块初始值设定项，方法是将第一个事务专用于执行初始值设定项函数。
 
 运行示例中模块的 `init` 函数创建一个 `Forge` 对象。
 
@@ -294,7 +294,7 @@ public fun new_sword(
 
 #[test]
 fun test_module_init() {
-    use sui::test_scenario;
+    use bfc::test_scenario;
 
     // Create test addresses representing users
     let admin = @0xAD;
@@ -333,4 +333,4 @@ fun test_module_init() {
 
 正如新的测试函数所示，第一个事务（显式）调用初始化程序。下一个事务检查 `Forge` 对象是否已创建并正确初始化。最后，管理员使用 `Forge` 创建一把剑并将其转让给初始所有者。
 
-您可以参考 `sui/examples` 目录下的 `first_package` 模块中的包的源代码（所有测试和功能都经过适当调整）。
+您可以参考 `bfc/examples` 目录下的 `first_package` 模块中的包的源代码（所有测试和功能都经过适当调整）。

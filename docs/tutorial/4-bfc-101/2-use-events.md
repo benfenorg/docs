@@ -1,17 +1,17 @@
 # 使用事件
 
-Sui 网络在链上存储无数对象，Move 代码可以使用这些对象执行操作。通常需要跟踪此活动，例如，发现模块铸造 NFT 的次数或统计智能合约生成的交易中的 SUI 数量。
+Bfc 网络在链上存储无数对象，Move 代码可以使用这些对象执行操作。通常需要跟踪此活动，例如，发现模块铸造 NFT 的次数或统计智能合约生成的交易中的 BFC 数量。
 
-为了支持活动监控，Move 提供了一个在 Sui 网络上发出事件的结构。当您与 Sui 网络建立连接时，您将在客户端和 Sui 网络节点之间创建双向交互式通信会话。通过开放会话，您可以订阅 Sui 网络添加到流中的特定事件，以创建事件的实时监控。
+为了支持活动监控，Move 提供了一个在 Bfc 网络上发出事件的结构。当您与 Bfc 网络建立连接时，您将在客户端和 Bfc 网络节点之间创建双向交互式通信会话。通过开放会话，您可以订阅 Bfc 网络添加到流中的特定事件，以创建事件的实时监控。
 
 ### Move 事件结构​
 
-Sui 中的事件对象由以下属性组成：
+Bfc 中的事件对象由以下属性组成：
 
 - `id` ：包含交易摘要 ID 和事件序列的 JSON 对象。
 - `packageId` ：发出事件的包的对象 ID。
 - `transactionModule` ：执行事务的模块。
-- `sender` ：触发事件的 Sui 网络地址。
+- `sender` ：触发事件的 Bfc 网络地址。
 - `type` ：发出的事件类型。
 - `parsedJson` ：描述事件的 JSON 对象。
 - `bcs` ：二进制规范序列化值。
@@ -19,7 +19,7 @@ Sui 中的事件对象由以下属性组成：
 
 ### 订阅事件​
 
-如果你想订阅链上的事件，你首先需要知道有哪些事件可用。您通常知道或可以发现您自己的代码发出的事件，但当您需要从您不拥有的包订阅链上事件时，事情就没那么简单了。 Sui RPC 提供了 queryEvents 方法来查询链上包并返回您可以订阅的可用事件。
+如果你想订阅链上的事件，你首先需要知道有哪些事件可用。您通常知道或可以发现您自己的代码发出的事件，但当您需要从您不拥有的包订阅链上事件时，事情就没那么简单了。 Bfc RPC 提供了 queryEvents 方法来查询链上包并返回您可以订阅的可用事件。
 
 ###  过滤事件​
 
@@ -27,13 +27,13 @@ Sui 中的事件对象由以下属性组成：
 
 ### 在 Move 中发出事件​
 
-要在 Move 模块中创建事件，请添加 sui::event 依赖项。
+要在 Move 模块中创建事件，请添加 bfc::event 依赖项。
 
 ```
-use sui::event;
+use bfc::event;
 ```
 
-添加依赖项后，只要您要监视的操作触发，您就可以使用 `emit` 函数来触发事件。例如，以下代码是使用数字甜甜圈的示例应用程序的一部分。 `collect_profits` 函数处理 SUI 的集合，并在调用该函数时发出事件。要对该事件采取行动，您需要订阅它。
+添加依赖项后，只要您要监视的操作触发，您就可以使用 `emit` 函数来触发事件。例如，以下代码是使用数字甜甜圈的示例应用程序的一部分。 `collect_profits` 函数处理 BFC 的集合，并在调用该函数时发出事件。要对该事件采取行动，您需要订阅它。
 
 ```
 /// Take coin from `DonutShop` and transfer it to tx sender.
@@ -49,9 +49,9 @@ public fun collect_profits( _: &ShopOwnerCap, shop: &mut DonutShop, ctx: &mut Tx
 
 ### 订阅 Move 中的事件​
 
-触发事件在很多时候并不够，您还需要能够侦听这些事件，以便可以对它们采取行动。在 Sui 中，您订阅这些事件并提供在事件触发时触发的逻辑。
+触发事件在很多时候并不够，您还需要能够侦听这些事件，以便可以对它们采取行动。在 Bfc 中，您订阅这些事件并提供在事件触发时触发的逻辑。
 
-Sui Full 节点支持使用通过 WebSocket API 传输的 JSON-RPC 通知的订阅功能。您可以直接与 RPC 交互（ suix_subscribeEvent、suix_subscribeTransaction），也可以使用 SDK（例如 Sui TypeScript SDK）。以下摘录自示例之一，使用 TypeScript SDK 创建对过滤器中标识的过滤器的异步订阅。
+Bfc Full 节点支持使用通过 WebSocket API 传输的 JSON-RPC 通知的订阅功能。您可以直接与 RPC 交互（ suix_subscribeEvent、suix_subscribeTransaction），也可以使用 SDK（例如 Bfc TypeScript SDK）。以下摘录自示例之一，使用 TypeScript SDK 创建对过滤器中标识的过滤器的异步订阅。
 
 ```
 let unsubscribe = await provider.subscribeEvent({
@@ -73,7 +73,7 @@ Move智能合约可以调用其他发出事件的智能合约。例如， `Deepb
 	"packageId": "0x158f2027f60c89bb91526d9bf08831d27f5a0fcb0f74e6698b9f0e1fb2be5d05",
 	"transactionModule": "deepbook_utils",
 	"sender": "0x4419ae182ac112bb065bda2146136ed02524ee2611478bfe8ca5d3835bee4af6",
-	"type": "0xdee9::clob_v2::OrderPlaced<0x2::sui::SUI, 0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN>",
+	"type": "0xdee9::clob_v2::OrderPlaced<0x2::bfc::BFC, 0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN>",
 	"parsedJson": {
 		"base_asset_quantity_placed": "1000000000",
 		"client_order_id": "20082022",
@@ -116,14 +116,14 @@ Move智能合约可以调用其他发出事件的智能合约。例如， `Deepb
 
 ###  示例​
 
-此示例利用 Sui TypeScript SDK 订阅 ID 为 `<PACKAGE_ID>` 的包发出的事件。每次事件触发时，代码都会向控制台显示响应。
+此示例利用 Bfc TypeScript SDK 订阅 ID 为 `<PACKAGE_ID>` 的包发出的事件。每次事件触发时，代码都会向控制台显示响应。
 
 ### TypeScript
 
-要创建事件订阅，您可以使用基本的 Node.js 应用程序。您需要 Sui TypeScript SDK，因此请在项目的根目录下使用 `npm install @mysten/sui` 安装该模块。在您的 TypeScript 代码中，导入 `JsonRpcProvider` 和来自库的连接。
+要创建事件订阅，您可以使用基本的 Node.js 应用程序。您需要 Bfc TypeScript SDK，因此请在项目的根目录下使用 `npm install @mysten/bfc` 安装该模块。在您的 TypeScript 代码中，导入 `JsonRpcProvider` 和来自库的连接。
 
 ```
-import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
+import { getFullnodeUrl, SuiClient } from '@mysten/bfc/client';
 
 // Package is on Testnet.
 const client = new SuiClient({
@@ -191,11 +191,11 @@ use anyhow::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let sui = SuiClientBuilder::default()
-        .ws_url("wss://fullnode.mainnet.sui.io:443")
-        .build("https://fullnode.mainnet.sui.io:443")
+    let bfc = SuiClientBuilder::default()
+        .ws_url("wss://fullnode.mainnet.bfc.io:443")
+        .build("https://fullnode.mainnet.bfc.io:443")
         .await.unwrap();
-    let mut subscribe_all = sui.event_api().subscribe_event(EventFilter::All(vec![])).await?;
+    let mut subscribe_all = bfc.event_api().subscribe_event(EventFilter::All(vec![])).await?;
     loop {
         println!("{:?}", subscribe_all.next().await);
     }

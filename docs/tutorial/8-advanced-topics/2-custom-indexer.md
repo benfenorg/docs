@@ -1,8 +1,8 @@
 # 自定义索引器
 
-您可以使用 Sui 微数据摄取框架构建自定义索引器。要创建索引器，您需要订阅具有完整检查点内容的检查点流。该流可以是 Mysten Labs 公开可用的流之一、您在本地环境中设置的流，也可以是两者的组合。
+您可以使用 Bfc 微数据摄取框架构建自定义索引器。要创建索引器，您需要订阅具有完整检查点内容的检查点流。该流可以是 Mysten Labs 公开可用的流之一、您在本地环境中设置的流，也可以是两者的组合。
 
-建立自定义索引器有助于改善延迟，允许修剪 Sui Full 节点的数据，并提供检查点数据的高效组合。
+建立自定义索引器有助于改善延迟，允许修剪 Bfc Full 节点的数据，并提供检查点数据的高效组合。
 
 ## 接口及数据格式​
 
@@ -15,7 +15,7 @@ trait Worker: Send + Sync {
 }
 ```
 
-在此示例中， `CheckpointData` 结构表示完整的检查点内容。该结构包含检查点摘要和内容，以及每个单独事务的详细信息。各个交易数据包括事件和输入/输出对象。此内容的完整定义位于 `sui-types` 箱的 `full_checkpoint_content.rs` 文件中。
+在此示例中， `CheckpointData` 结构表示完整的检查点内容。该结构包含检查点摘要和内容，以及每个单独事务的详细信息。各个交易数据包括事件和输入/输出对象。此内容的完整定义位于 `bfc-types` 箱的 `full_checkpoint_content.rs` 文件中。
 
 ## 流式数据源检查点​
 
@@ -25,8 +25,8 @@ trait Worker: Send + Sync {
 
 最直接的流式数据源是订阅检查点内容的远程存储。 Mysten Labs 提供以下存储桶：
 
-- 测试网： https://checkpoints.testnet.sui.io
-- 主网： https://checkpoints.mainnet.sui.io
+- 测试网： https://checkpoints.testnet.bfc.io
+- 主网： https://checkpoints.mainnet.bfc.io
 
 ## 本地 Reader
 
@@ -47,7 +47,7 @@ checkpoint-executor-config:
 
 ## 示例
 
-Sui 数据摄取框架提供了帮助函数来快速引导索引器工作流程。
+Bfc 数据摄取框架提供了帮助函数来快速引导索引器工作流程。
 
 ```rust
 struct CustomWorker;
@@ -65,7 +65,7 @@ impl Worker for CustomWorker {
 async fn main() -> Result<()> {
     let (executor, term_sender) = setup_single_workflow(
         CustomWorker,
-        "https://checkpoints.mainnet.sui.io".to_string(),
+        "https://checkpoints.mainnet.bfc.io".to_string(),
         0, /* initial checkpoint number */
         5, /* concurrency */
         None, /* extra reader options */
@@ -101,7 +101,7 @@ async fn main() -> Result<()> {
   executor.register(worker_pool).await?;
   executor.run(
       PathBuf::from("..."), // path to a local directory
-      Some("https://checkpoints.mainnet.sui.io".to_string()),
+      Some("https://checkpoints.mainnet.bfc.io".to_string()),
       vec![], // optional remote store access options
       exit_receiver,
   ).await?;

@@ -44,7 +44,7 @@ Gets all coins for the address in the request body. Begin listing the coins that
   "result": {
     "data": [
       {
-        "coinType": "0x2::sui::SUI",
+        "coinType": "0x2::bfc::BFC",
         "coinObjectId": "0x91825debff541cf4e08b5c5f7296ff9840e6f0b185af93984cde8cf3870302c0",
         "version": "103626",
         "digest": "7dp5WtTmtGp83EXYYFMzjBJRFeSgR67AzqMETLrfgeFx",
@@ -52,7 +52,7 @@ Gets all coins for the address in the request body. Begin listing the coins that
         "previousTransaction": "9WfFUVhjbbh4tWkyUse1QxzbKX952cyXScH7xJNPB2vQ"
       },
       {
-        "coinType": "0x2::sui::SUI",
+        "coinType": "0x2::bfc::BFC",
         "coinObjectId": "0x48a53f22e2e901ea2a5bf44fdd5bb94a1d83b6efc4dd779f0890ca3b1f6ba997",
         "version": "103626",
         "digest": "9xLdMXezY8d1yRA2TtN6pYjapyy2EVKHWNriGPFGCFvd",
@@ -60,7 +60,7 @@ Gets all coins for the address in the request body. Begin listing the coins that
         "previousTransaction": "Byq9SyV7x6fvzaf88YRA9JM8vLbVLJAqUX8pESDmKcgw"
       },
       {
-        "coinType": "0x2::sui::SUI",
+        "coinType": "0x2::bfc::BFC",
         "coinObjectId": "0x6867fcc63161269c5c0c73b02229486bbaff319209dfb8299ced3b8609037997",
         "version": "103626",
         "digest": "5xexWFq6QpGHBQyC9P2cbAJXq9qm2EjzfuRM9NwS1uyG",

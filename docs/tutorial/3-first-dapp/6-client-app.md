@@ -1,6 +1,6 @@
 # 使用 TypeScript SDK 的客户端应用程序
 
-此练习与本节前面主题中构建的示例不同。该指令不是向正在运行的示例添加前端，而是引导您在 React 应用程序中设置 dApp Kit，允许您连接到钱包，并从 Sui RPC 节点查询数据以显示在您的应用程序中。您可以使用它为之前使用的示例创建自己的前端，但如果您想要快速启动并运行功能齐全的应用程序，请在终端或控制台中运行以下命令，以使用本练习中的所有步骤构建新应用程序已经实施：
+此练习与本节前面主题中构建的示例不同。该指令不是向正在运行的示例添加前端，而是引导您在 React 应用程序中设置 dApp Kit，允许您连接到钱包，并从 Bfc RPC 节点查询数据以显示在您的应用程序中。您可以使用它为之前使用的示例创建自己的前端，但如果您想要快速启动并运行功能齐全的应用程序，请在终端或控制台中运行以下命令，以使用本练习中的所有步骤构建新应用程序已经实施：
 
 :::info
 您必须使用pnpm或yarn包管理器来创建Sui项目脚手架。如果需要，请按照 pnpm install 或yarn install 说明进行操作。
@@ -16,13 +16,13 @@ pnpm create @mysten/dapp --template react-client-dapp
 yarn create @mysten/dapp --template react-client-dapp
 ```
 
-### Sui TypeScript SDK
+### Bfc TypeScript SDK
 
-Sui TypeScript SDK (@mysten/sui) 提供了通过 TypeScript 与 Sui 生态系统交互所需的所有低级功能。您可以在任何 TypeScript 或 JavaScript 项目中使用它，包括 Web 应用程序、Node.js 应用程序或使用支持 TypeScript 的 React Native 等工具编写的移动应用程序。
+Bfc TypeScript SDK (@mysten/bfc) 提供了通过 TypeScript 与 Bfc 生态系统交互所需的所有低级功能。您可以在任何 TypeScript 或 JavaScript 项目中使用它，包括 Web 应用程序、Node.js 应用程序或使用支持 TypeScript 的 React Native 等工具编写的移动应用程序。
 
 ### dApp Kit
 
-dApp Kit (@mysten/dapp-kit) 是 React hooks、组件和实用程序的集合，使在 Sui 上构建 dApp 变得简单。有关 dApp 套件的更多信息，请参阅 dApp 套件文档。
+dApp Kit (@mysten/dapp-kit) 是 React hooks、组件和实用程序的集合，使在 Bfc 上构建 dApp 变得简单。有关 dApp 套件的更多信息，请参阅 dApp 套件文档。
 
 ### 安装依赖项​
 
@@ -37,7 +37,7 @@ npm init vite
 现在您已经有了 React 应用程序，您可以安装必要的依赖项来使用 dApp Kit：
 
 ```
-npm install @mysten/sui @mysten/dapp-kit @tanstack/react-query
+npm install @mysten/bfc @mysten/dapp-kit @tanstack/react-query
 ```
 
 ### 设置Provider组件​
@@ -62,11 +62,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
-接下来，设置 `SuiClientProvider` 。此 `Provider` 将 `SuiClient` 实例从 `@mysten/sui` 传递到 dApp Kit 中的所有钩子。该提供商管理 dApp Kit 连接的网络，并且可以接受多个网络的配置。此练习连接到 `devnet` 。
+接下来，设置 `SuiClientProvider` 。此 `Provider` 将 `SuiClient` 实例从 `@mysten/bfc` 传递到 dApp Kit 中的所有钩子。该提供商管理 dApp Kit 连接的网络，并且可以接受多个网络的配置。此练习连接到 `devnet` 。
 
 ```
 import { SuiClientProvider } from '@mysten/dapp-kit';
-import { getFullnodeUrl } from '@mysten/sui/client';
+import { getFullnodeUrl } from '@mysten/bfc/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -92,7 +92,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 import '@mysten/dapp-kit/dist/index.css';
 
 import { SuiClientProvider, WalletProvider } from '@mysten/dapp-kit';
-import { getFullnodeUrl } from '@mysten/sui/client';
+import { getFullnodeUrl } from '@mysten/bfc/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();

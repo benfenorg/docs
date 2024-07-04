@@ -9,7 +9,7 @@ entry fun roll_dice(r: &Random, ctx: &mut TxContext): Dice {
 }
 ```
 
-`Random` 有一个保留地址 `0x8` 。请参阅 `random.move` 了解用于访问 Sui 上随机性的 Move API。
+`Random` 有一个保留地址 `0x8` 。请参阅 `random.move` 了解用于访问 Bfc 上随机性的 Move API。
 
 :::note
 尽管 `Random` 是共享对象，但可变操作无法访问它，并且任何尝试修改它的事务都会失败。
@@ -31,7 +31,7 @@ module games::dice {
   struct GuessedCorrectly has drop { ... };
 
   /// If you guess correctly the output you get a GuessedCorrectly object.
-  public fun play_dice(guess: u8, fee: Coin<SUI>, r: &Random, ctx: &mut TxContext): Option<GuessedCorrectly> {
+  public fun play_dice(guess: u8, fee: Coin<BFC>, r: &Random, ctx: &mut TxContext): Option<GuessedCorrectly> {
     // Pay for the turn
     assert!(coin::value(&fee) == 1000000, EInvalidAmount);
     transfer::public_transfer(fee, CREATOR_ADDRESS);
@@ -61,7 +61,7 @@ public fun attack(guess: u8, r: &Random, ctx: &mut TxContext): GuessedCorrectly 
 为了防止本示例中的组合攻击，请将 `play_dice` 定义为私有 `entry` 函数，以便其他模块的函数无法调用它，例如：
 
 ```move
-entry fun play_dice(guess: u8, fee: Coin<SUI>, r: &Random, ctx: &mut TxContext): Option<GuessedCorrectly> {
+entry fun play_dice(guess: u8, fee: Coin<BFC>, r: &Random, ctx: &mut TxContext): Option<GuessedCorrectly> {
   ...
 }
 ```
@@ -72,7 +72,7 @@ Move 编译器通过拒绝以 Random 作为参数的 public 函数来强制执�
 
 ## 可编程事务块（PTB）限制​
 
-即使 `play_dice` 被定义为私有 entry 函数，与之前描述的攻击类似的攻击也涉及 PTB。例如，考虑前面定义的 `entry play_dice(guess: u8, fee: Coin<SUI>, r: &Random, ctx: &mut TxContext): Option<GuessedCorrectly> { … }` 函数，攻击者可以发布该函数：
+即使 `play_dice` 被定义为私有 entry 函数，与之前描述的攻击类似的攻击也涉及 PTB。例如，考虑前面定义的 `entry play_dice(guess: u8, fee: Coin<BFC>, r: &Random, ctx: &mut TxContext): Option<GuessedCorrectly> { … }` 函数，攻击者可以发布该函数：
 
 ```move
 public fun attack(output: Option<GuessedCorrectly>): GuessedCorrectly {
@@ -100,7 +100,7 @@ Move 编译器通过拒绝以 `RandomGenerator` 作为参数的 `public` 函数�
 
 ```move
 // Insecure implementation, do not use.
-entry fun insecure_play(r: &Random, payment: Coin<SUI>, ...) {
+entry fun insecure_play(r: &Random, payment: Coin<BFC>, ...) {
   ...
   let generator = new_generator(r, ctx);
   let win = random::generate_bool(generator);
