@@ -72,18 +72,18 @@ const config = {
             docId: 'tutorial/start',
             label: '入门指南',
           },
-          {
-            type: 'doc',
-            position: 'left',
-            docId: 'move/start',
-            label: 'Move语言',
-          },
-          {
-            type: 'doc',
-            position: 'left',
-            docId: 'references/start',
-            label: '参考',
-          },
+          // {
+          //   type: 'doc',
+          //   position: 'left',
+          //   docId: 'move/start',
+          //   label: 'Move语言',
+          // },
+          // {
+          //   type: 'doc',
+          //   position: 'left',
+          //   docId: 'references/start',
+          //   label: '参考',
+          // },
           {
             to: '/blog',
             label: '博客',
