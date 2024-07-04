@@ -1,0 +1,7 @@
+{
+  "label": "加密机制",
+  "link": {
+    "type": "generated-index",
+    "description": "BenFen 使用密码学加密算法可确保您的智能合约交易在 BFC 区块链上的安全性。"
+  }
+}
