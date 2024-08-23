@@ -6,15 +6,14 @@
 
 BenFen 支持以下操作系统：
 
-- Linux - Ubuntu 22.04
+- Linux
 - macOS
-- Windows
 
 ## 二进制安装
 
 每个 BenFen 的发行版都提供了一组适用于多个操作系统的二进制文件。您可以从 GitHub 下载这些二进制文件并使用它们来安装 BenFen。
 
-访问 https://github.com/benfenlab/benfen ，在右侧面板找到 `Release`，点击下载最新版本。
+访问 [https://github.com/benfenorg/bfc](https://github.com/benfenorg/bfc) ，在右侧面板找到 `Release`，点击下载最新版本。
 
 ## 从源代码构建
 
@@ -27,8 +26,6 @@ BenFen 支持以下操作系统：
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
-
-如果您正在使用 Windows，请下载并运行 [rustup-init.exe](https://static.rust-lang.org/rustup/dist/i686-pc-windows-gnu/rustup-init.exe)。
 
 ### 安装依赖包
 

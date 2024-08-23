@@ -6,15 +6,15 @@
 
 确保您的终端或控制台位于包含您的包的目录中（ `my_first_package` ，如果您正在执行此操作）。使用以下命令来构建您的包：
 
-```
+```plain
 $ bfc move build
 ```
 
 成功的构建会返回类似于以下内容的响应：
 
-```
-UPDATING GIT DEPENDENCY https://github.com/MystenLabs/bfc.git
-INCLUDING DEPENDENCY Bfc
+```plain
+UPDATING GIT DEPENDENCY https://github.com/benfenorg/bfc.git
+INCLUDING DEPENDENCY Sui
 INCLUDING DEPENDENCY MoveStdlib
 BUILDING my_first_package
 ```
@@ -23,19 +23,19 @@ BUILDING my_first_package
 
 现在您已经设计了资产及其访问器函数，是时候在发布之前测试包代码了。
 
-###  测试包​
+### 测试包​
 
 Bfc 包括对 Move 测试框架的支持。使用该框架，您可以编写分析 Move 代码的单元测试，就像其他语言的测试框架一样，例如内置的 Rust 测试框架或 Java 的 JUnit 框架。
 
 单个 Move 单元测试封装在一个公共函数中，该函数没有参数、没有返回值，并且具有 `#[test]` 注释。当您从包根目录（根据当前运行示例的 `my_move_package` 目录）调用 `bfc move test` 命令时，测试框架会执行此类函数：
 
-```
+```plain
 $ bfc move test
 ```
 
 如果对编写包中创建的包执行此命令，您将看到以下输出。毫不奇怪，测试结果具有 `OK` 状态，因为还没有编写失败的测试。
 
-```
+```plain
 BUILDING Bfc
 BUILDING MoveStdlib
 BUILDING my_first_package
@@ -45,12 +45,11 @@ Test result: OK. Total tests: 0; passed: 0; failed: 0
 
 要实际测试您的代码，您需要添加测试函数。首先将基本测试函数添加到模块定义内的 `my_module.move` 文件中：
 
-```
-// examples/move/first_package/sources/example.move
+```rust
 #[test]
 fun test_sword_create() {
     // Create a dummy TxContext for testing
-    let mut ctx = tx_context::dummy();
+    let ctx = tx_context::dummy();
 
     // Create a sword
     let sword = Sword {
@@ -60,7 +59,7 @@ fun test_sword_create() {
     };
 
     // Check if accessor functions return correct values
-    assert!(sword.magic() == 42 && sword.strength() == 7, 1);
+    assert!(magic(&sword) == 42 && strength(&sword) == 7, 1);
 }
 ```
 
@@ -70,29 +69,29 @@ fun test_sword_create() {
 
 现在您已经有了测试功能，请再次运行测试命令：
 
-```
+```plain
 $ bfc move test
 ```
 
 但是，运行 `test` 命令后，您会收到编译错误而不是测试结果：
 
-```
+```plain
 error[E06001]: unused value without 'drop'
-   ┌─ ./sources/my_module.move:59:65
-   │
- 9 │       public struct Sword has key, store {
-   │                     ----- To satisfy the constraint, the 'drop' ability would need to be added here
-   ·
-52 │           let sword = Sword {
+   ┌─ ./sources/my_module.move:62:65
+   │  
+ 9 │       struct Sword has key, store {
+   │              ----- To satisfy the constraint, the 'drop' ability would need to be added here
+   ·  
+55 │           let sword = Sword {
    │               ----- The local variable 'sword' still contains a value. The value does not have the 'drop' ability and must be consumed before the function returns
    │ ╭─────────────────────'
-53 │ │             id: object::new(&mut ctx),
-54 │ │             magic: 42,
-55 │ │             strength: 7,
-56 │ │         };
-   │ ╰─────────' The type 'my_first_package::my_module::Sword' does not have the ability 'drop'
+56 │ │             id: object::new(&mut ctx),
+57 │ │             magic: 42,
+58 │ │             strength: 7,
+59 │ │         };
+   │ ╰─────────' The type '(my_first_package=0x0)::example::Sword' does not have the ability 'drop'
    · │
-59 │           assert!(sword.magic() == 42 && sword.strength() == 7, 1);
+62 │           assert!(magic(&sword) == 42 && strength(&sword) == 7, 1);
    │                                                                   ^ Invalid return
 ```
 
@@ -104,20 +103,38 @@ error[E06001]: unused value without 'drop'
 
 为了使测试正常工作，我们需要使用默认导入的 `transfer` 模块。将以下行添加到测试函数的末尾（在 `assert!` 调用之后），以将 `sword` 的所有权转移到新创建的虚拟地址：
 
-```
-// examples/move/first_package/sources/example.move
-let dummy_address = @0xCAFE;
-transfer::public_transfer(sword, dummy_address);
+```plain
+#[test]
+fun test_sword_create() {
+    // Create a dummy TxContext for testing
+    let ctx = tx_context::dummy();
+
+    // Create a sword
+    let sword = Sword {
+        id: object::new(&mut ctx),
+        magic: 42,
+        strength: 7,
+    };
+
+    // Check if accessor functions return correct values
+    assert!(magic(&sword) == 42 && strength(&sword) == 7, 1);
+
+    // transfer sword to dummy address:
+    let dummy_address = @0xCAFE;
+    transfer::public_transfer(sword, dummy_address);
+}
 ```
 
 再次运行测试命令。现在输出显示单个成功的测试已运行：
 
-```
-BUILDING MoveStdlib
-BUILDING Bfc
+```plain
+$ bfc move test
+UPDATING GIT DEPENDENCY https://github.com/benfenorg/bfc.git
+INCLUDING DEPENDENCY Sui
+INCLUDING DEPENDENCY MoveStdlib
 BUILDING my_first_package
 Running Move unit tests
-[ PASS    ] 0x0::my_module::test_sword_create
+[ PASS    ] 0x0::example::test_sword_create
 Test result: OK. Total tests: 1; passed: 1; failed: 0
 ```
 
@@ -127,7 +144,7 @@ Test result: OK. Total tests: 1; passed: 1; failed: 0
 
 例子：
 
-```
+```plain
 $ bfc move test sword
 ```
 
@@ -135,13 +152,13 @@ $ bfc move test sword
 
 您可以通过以下方式发现更多测试选项：
 
-```
+```plain
 $ bfc move test -h
 ```
 
 ### Bfc 特定测试​
 
-前面的测试示例使用 Move，但除了使用一些 Bfc 包（例如 `bfc::tx_context` 和 `bfc::transfer` ）之外，并不特定于 Sui。虽然这种测试风格对于为 Bfc 编写 Move 代码已经很有用，但您可能还想测试其他特定于 Bfc 的功能。特别是，Sui 中的 Move 调用封装在 Bfc 事务中，您可能希望在单个测试中测试不同事务之间的交互（例如，一个事务创建对象，另一个事务传输对象）。
+前面的测试示例使用 Move，但除了使用一些 Sui 包（例如 `sui::tx_context` 和 `sui::transfer` ）之外，并不特定于 Sui。虽然这种测试风格对于为 Bfc 编写 Move 代码已经很有用，但您可能还想测试其他特定于 Bfc Bfc 中的 Move 调用封装在 Bfc 事务中，您可能希望在单个测试中测试不同事务之间的交互（例如，一个事务创建对象，另一个事务传输对象）。
 
 Bfc 特定的测试是通过 `test_scenario` 模块支持的，该模块提供了与 Bfc 相关的测试功能，而这些功能在纯 Move 及其测试框架中是不可用的。
 
@@ -151,15 +168,20 @@ Bfc 特定的测试是通过 `test_scenario` 模块支持的，该模块提供�
 
 更新您的 `my_module.move` 文件以包含可从 Bfc 调用的实现 `sword` 创建的函数。完成此操作后，您就可以添加使用 `test_scenario` 模块的多事务测试来测试这些新功能。将此函数放在访问器之后（注释中的第 5 部分）。
 
-```
-// examples/move/first_package/sources/example.move
-
-public fun sword_create(magic: u64, strength: u64, ctx: &mut TxContext): Sword {
-    Sword {
+```rust
+public fun sword_create(magic: u64, strength: u64, recipient: address, ctx: &mut TxContext) {
+    let sword = Sword {
         id: object::new(ctx),
         magic: magic,
         strength: strength,
-    }
+    };
+    // transfer the sword
+    transfer::transfer(sword, recipient);
+}
+
+public fun sword_transfer(sword: Sword, recipient: address, _ctx: &mut TxContext) {
+    // transfer the sword
+    transfer::public_transfer(sword, recipient);   
 }
 ```
 
@@ -167,45 +189,49 @@ public fun sword_create(magic: u64, strength: u64, ctx: &mut TxContext): Sword {
 
 包含新函数后，添加另一个测试函数以确保其行为符合预期。
 
-```
-// examples/move/first_package/sources/example.move
-
+```rust
 #[test]
 fun test_sword_transactions() {
-    use bfc::test_scenario;
+    use sui::test_scenario;
 
     // Create test addresses representing users
+    let admin = @0xBABE;
     let initial_owner = @0xCAFE;
     let final_owner = @0xFACE;
 
     // First transaction executed by initial owner to create the sword
-    let mut scenario = test_scenario::begin(initial_owner);
+    let scenario_val = test_scenario::begin(admin);
+    let scenario = &mut scenario_val;
     {
-        // Create the sword and transfer it to the initial owner
-        let sword = sword_create(42, 7, scenario.ctx());
-        transfer::public_transfer(sword, initial_owner);
+        init(test_scenario::ctx(scenario));
     };
-
-    // Second transaction executed by the initial sword owner
-    scenario.next_tx(initial_owner);
+    // second transaction executed by admin to create the sword
+    test_scenario::next_tx(scenario, admin);
     {
-        // Extract the sword owned by the initial owner
-        let sword = scenario.take_from_sender<Sword>();
-        // Transfer the sword to the final owner
-        transfer::public_transfer(sword, final_owner);
+        // create the sword and transfer it to the initial owner
+        sword_create(42, 7, initial_owner, test_scenario::ctx(scenario));
     };
-
-    // Third transaction executed by the final sword owner
-    scenario.next_tx(final_owner);
+    // third transaction executed by the initial sword owner
+    test_scenario::next_tx(scenario, initial_owner);
     {
-        // Extract the sword owned by the final owner
-        let sword = scenario.take_from_sender<Sword>();
-        // Verify that the sword has expected properties
-        assert!(sword.magic() == 42 && sword.strength() == 7, 1);
-        // Return the sword to the object pool (it cannot be simply "dropped")
-        scenario.return_to_sender(sword)
+        // extract the sword owned by the initial owner
+        let sword = test_scenario::take_from_sender<Sword>(scenario);
+        // transfer the sword to the final owner
+        sword_transfer(sword, final_owner, test_scenario::ctx(scenario))
     };
-    scenario.end();
+    // fourth transaction executed by the final sword owner
+    test_scenario::next_tx(scenario, final_owner);
+    {
+        // extract the sword owned by the final owner
+        let sword = test_scenario::take_from_sender<Sword>(scenario);
+        // verify that the sword has expected properties
+        assert!(magic(&sword) == 42 && strength(&sword) == 7, 1);
+        // return the sword to the object pool
+        test_scenario::return_to_sender(scenario, sword)
+        // or uncomment the line below to destroy the sword instead
+        // test_utils::destroy(sword)
+    };
+    test_scenario::end(scenario_val);
 }
 ```
 
@@ -223,13 +249,15 @@ fun test_sword_transactions() {
 
 再次运行测试命令可以看到我们的模块的两次成功测试：
 
-```
-BUILDING Bfc
-BUILDING MoveStdlib
+```plain
+$ bfc move test
+UPDATING GIT DEPENDENCY https://github.com/benfenorg/bfc.git
+INCLUDING DEPENDENCY Sui
+INCLUDING DEPENDENCY MoveStdlib
 BUILDING my_first_package
 Running Move unit tests
-[ PASS    ] 0x0::my_module::test_sword_create
-[ PASS    ] 0x0::my_module::test_sword_transactions
+[ PASS    ] 0x0::example::test_sword_create
+[ PASS    ] 0x0::example::test_sword_transactions
 Test result: OK. Total tests: 2; passed: 2; failed: 0
 ```
 
@@ -254,30 +282,21 @@ Test result: OK. Total tests: 2; passed: 2; failed: 0
 
 运行示例中模块的 `init` 函数创建一个 `Forge` 对象。
 
-```
-// examples/move/first_package/sources/example.move
-
+```rust
 fun init(ctx: &mut TxContext) {
     let admin = Forge {
         id: object::new(ctx),
         swords_created: 0,
     };
-
-    transfer::transfer(admin, ctx.sender());
+    let sender = tx_context::sender(ctx);
+    transfer::transfer(admin, sender);
 }
 ```
 
 到目前为止，您进行的测试调用了 `init` 函数，但初始化函数本身并未经过测试以确保它正确创建 `Forge` 对象。要测试此功能，请添加一个 `new_sword` 函数以将锻造作为参数，并在函数末尾更新创建的剑的数量。如果这是一个实际的模块，您可以将 `sword_create` 函数替换为 `new_sword` 。然而，为了防止现有测试失败，我们将保留这两个功能。
 
 ```
-// examples/move/first_package/sources/example.move
-
-public fun new_sword(
-    forge: &mut Forge,
-    magic: u64,
-    strength: u64,
-    ctx: &mut TxContext,
-): Sword {
+public fun new_sword(forge: &mut Forge, magic: u64, strength: u64, ctx: &mut TxContext): Sword {
     forge.swords_created = forge.swords_created + 1;
     Sword {
         id: object::new(ctx),
@@ -289,48 +308,40 @@ public fun new_sword(
 
 现在，创建一个函数来测试模块初始化：
 
-```
-// examples/move/first_package/sources/example.move
+```rust
+#[test_only] use sui::test_scenario as ts;
+
+#[test_only] const ADMIN: address = @0xAD;
 
 #[test]
-fun test_module_init() {
-    use bfc::test_scenario;
+public fun test_module_init() {
+    let ts = ts::begin(@0x0);
 
-    // Create test addresses representing users
-    let admin = @0xAD;
-    let initial_owner = @0xCAFE;
-
-    // First transaction to emulate module initialization
-    let mut scenario = test_scenario::begin(admin);
+    // first transaction to emulate module initialization.
     {
-        init(scenario.ctx());
+        ts::next_tx(&mut ts, ADMIN);
+        init(ts::ctx(&mut ts));
     };
 
-    // Second transaction to check if the forge has been created
+    // second transaction to check if the forge has been created
     // and has initial value of zero swords created
-    scenario.next_tx(admin);
     {
-        // Extract the Forge object
-        let forge = scenario.take_from_sender<Forge>();
-        // Verify number of created swords
-        assert!(forge.swords_created() == 0, 1);
-        // Return the Forge object to the object pool
-        scenario.return_to_sender(forge);
+        ts::next_tx(&mut ts, ADMIN);
+
+        // extract the Forge object
+        let forge: Forge = ts::take_from_sender(&mut ts);
+
+        // verify number of created swords
+        assert!(swords_created(&forge) == 0, 1);
+
+        // return the Forge object to the object pool
+        ts::return_to_sender(&mut ts, forge);
     };
 
-    // Third transaction executed by admin to create the sword
-    scenario.next_tx(admin);
-    {
-        let mut forge = scenario.take_from_sender<Forge>();
-        // Create the sword and transfer it to the initial owner
-        let sword = forge.new_sword(42, 7, scenario.ctx());
-        transfer::public_transfer(sword, initial_owner);
-        scenario.return_to_sender(forge);
-    };
-    scenario.end();
+    ts::end(ts);
 }
 ```
 
 正如新的测试函数所示，第一个事务（显式）调用初始化程序。下一个事务检查 `Forge` 对象是否已创建并正确初始化。最后，管理员使用 `Forge` 创建一把剑并将其转让给初始所有者。
 
-您可以参考 `bfc/examples` 目录下的 `first_package` 模块中的包的源代码（所有测试和功能都经过适当调整）。
+您可以参考 `my_first_package` 模块中的包的[源代码](my_module.move)（所有测试和功能都经过适当调整）。
