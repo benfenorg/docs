@@ -6,7 +6,7 @@
 // examples/move/coin/sources/my_coin.move
 
 module examples::my_coin {
-    use bfc::coin::{Self, TreasuryCap};
+    use sui::coin::{Self, TreasuryCap};
 
     public struct MY_COIN has drop {}
 

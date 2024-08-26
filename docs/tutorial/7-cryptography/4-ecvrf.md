@@ -46,8 +46,8 @@ Output: 2b7e45821d80567761e8bb3fc519efe5ad80cdb4423227289f960319bbcf6eea1aef30c0
 
 ```move
 module math::ecvrf_test {
-    use bfc::ecvrf;
-    use bfc::event;
+    use sui::ecvrf;
+    use sui::event;
 
     /// Event on whether the output is verified
     struct VerifiedEvent has copy, drop {

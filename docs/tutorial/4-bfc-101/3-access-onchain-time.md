@@ -22,7 +22,7 @@ public fun timestamp_ms(clock: &Clock): u64 {
 // examples/move/basics/sources/clock.move
 
 module basics::clock {
-    use bfc::{clock::Clock, event};
+    use sui::{clock::Clock, event};
 
     public struct TimeEvent has copy, drop, store {
         timestamp_ms: u64,
@@ -91,7 +91,7 @@ public fun destroy_for_testing(clock: Clock) {
 
 #[test_only]
 module bfc::clock_tests {
-    use bfc::clock;
+    use sui::clock;
 
     #[test]
     fun creating_a_clock_and_incrementing_it() {

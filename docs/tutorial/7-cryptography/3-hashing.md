@@ -16,9 +16,9 @@ std::hash 模块的 Move 标准库中提供了 SHA2-256 和 SHA3-256 哈希函�
 ```move
 module test::hashing_std {
     use std::hash;
-    use bfc::object::{Self, UID};
-    use bfc::tx_context::TxContext;
-    use bfc::transfer;
+    use sui::object::{Self, UID};
+    use sui::tx_context::TxContext;
+    use sui::transfer;
     use std::vector;
 
     /// Object that holds the output hash value.
@@ -42,10 +42,10 @@ Keccak256 和 Blake2b-256 哈希函数可通过 Bfc Move 库中的 bfc::hash 模
 
 ```move
 module test::hashing_sui {
-    use bfc::hash;
-    use bfc::object::{Self, UID};
-    use bfc::tx_context::TxContext;
-    use bfc::transfer;
+    use sui::hash;
+    use sui::object::{Self, UID};
+    use sui::tx_context::TxContext;
+    use sui::transfer;
     use std::vector;
 
     /// Object that holds the output hash value.

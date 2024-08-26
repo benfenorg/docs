@@ -112,8 +112,8 @@ proof.serialize_compressed(&mut proof_points_bytes).unwrap();
 
 ```move
 module test::groth16_test {
-    use bfc::groth16;
-    use bfc::event;
+    use sui::groth16;
+    use sui::event;
 
     /// Event on whether the proof is verified
     struct VerifiedEvent has copy, drop {

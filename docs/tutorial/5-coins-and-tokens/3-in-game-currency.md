@@ -16,7 +16,7 @@ Bfc 存储库提供了创建游戏内货币的基本示例。创建示例经济�
 // examples/move/token/sources/gems.move
 
 module examples::sword {
-    use bfc::token::{Self, Token, ActionRequest};
+    use sui::token::{Self, Token, ActionRequest};
     use examples::gem::GEM;
 
     const EWrongAmount: u64 = 0;

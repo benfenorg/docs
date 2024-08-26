@@ -295,7 +295,7 @@ fun init(ctx: &mut TxContext) {
 
 到目前为止，您进行的测试调用了 `init` 函数，但初始化函数本身并未经过测试以确保它正确创建 `Forge` 对象。要测试此功能，请添加一个 `new_sword` 函数以将锻造作为参数，并在函数末尾更新创建的剑的数量。如果这是一个实际的模块，您可以将 `sword_create` 函数替换为 `new_sword` 。然而，为了防止现有测试失败，我们将保留这两个功能。
 
-```
+```rust
 public fun new_sword(forge: &mut Forge, magic: u64, strength: u64, ctx: &mut TxContext): Sword {
     forge.swords_created = forge.swords_created + 1;
     Sword {

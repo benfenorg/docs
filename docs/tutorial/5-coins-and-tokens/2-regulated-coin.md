@@ -8,8 +8,8 @@ Bfc Coin标准提供了 `create_regulated_currency` 函数来创建硬币。此�
 // examples/move/coin/sources/regcoin.move
 
 module examples::regcoin {
-    use bfc::coin::{Self, DenyCap};
-    use bfc::deny_list::{DenyList};
+    use sui::coin::{Self, DenyCap};
+    use sui::deny_list::{DenyList};
 
     public struct REGCOIN has drop {}
 

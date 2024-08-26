@@ -20,8 +20,8 @@ Bfc 上的对象可以是共享的（可通过任何事务进行读取和写入�
 
 ```
 module escrow::lock {
-    use bfc::object::{Self, ID, UID};
-    use bfc::tx_context::TxContext;
+    use sui::object::{Self, ID, UID};
+    use sui::tx_context::TxContext;
 
     /// A wrapper that protects access to `obj` by requiring access to a `Key`.
     ///
@@ -70,9 +70,9 @@ module escrow::lock {
     }
 
     // === Tests ===
-    #[test_only] use bfc::coin::{Self, Coin};
-    #[test_only] use bfc::bfc::BFC;
-    #[test_only] use bfc::test_scenario::{Self as ts, Scenario};
+    #[test_only] use sui::coin::{Self, Coin};
+    #[test_only] use sui::bfc::BFC;
+    #[test_only] use sui::test_scenario::{Self as ts, Scenario};
 
     #[test_only]
     fun test_coin(ts: &mut Scenario): Coin<BFC> {
@@ -233,7 +233,7 @@ public fun swap<T: key + store, U: key + store>(
 ///
 ///    - The key supplied in the swap unlocks the `Locked<U>`.
 module escrow::shared {
-    use bfc::{
+    use sui::{
         event,
         dynamic_object_field::{Self as dof}
     };
@@ -375,9 +375,9 @@ module escrow::shared {
     }
 
     // === Tests ===
-    #[test_only] use bfc::coin::{Self, Coin};
-    #[test_only] use bfc::bfc::BFC;
-    #[test_only] use bfc::test_scenario::{Self as ts, Scenario};
+    #[test_only] use sui::coin::{Self, Coin};
+    #[test_only] use sui::bfc::BFC;
+    #[test_only] use sui::test_scenario::{Self as ts, Scenario};
 
     #[test_only] const ALICE: address = @0xA;
     #[test_only] const BOB: address = @0xB;
