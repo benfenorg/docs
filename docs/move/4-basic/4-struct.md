@@ -62,6 +62,7 @@ fun test_hello() {
 
 您可能注意到了，如果一个结构体没有声明任何能力，使用它后，编译器会发出错误：
 
+```
 public struct Coffee {
     name: String,
     price: u8
@@ -74,10 +75,13 @@ fun test_hello() {
         price: 10,
     };
 }
+```
 
 上述代码编译器会报错：
 
+```
 The type 'Coffee' does not have the ability 'drop'.
+```
 
 这是因为结构体作为一个对象，不可在创建后丢弃。没有drop能力的结构体必须被存储或解包（Unpacking）。解包意味着该结构体被“拆解”为零散的字段：
 
